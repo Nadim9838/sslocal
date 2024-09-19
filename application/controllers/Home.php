@@ -231,10 +231,10 @@ class Home extends CI_Controller {
 	}
 
 	// Delete the user 
-	public function delete_user() {
+	public function delete_mobile() {
 		if ($this->session->has_userdata('login')) {
 			$userId = $this->uri->segment(3);
-			$result = $this->Crud->delete_user($userId);
+			$result = $this->Crud->delete_mobile($userId);
 			if($result) {
 				$this->session->set_flashdata('msg', '<div class="alert alert-success text-center">User Deleted Successfully.</div>');
 				echo 1;
