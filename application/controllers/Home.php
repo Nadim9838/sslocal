@@ -197,6 +197,7 @@ class Home extends CI_Controller {
 				$data['name'] = $this->input->post('name');
 				$data['email'] = $this->input->post('email');
 				$data['mobile'] = $this->input->post('mobile');
+				$data['status'] = $this->input->post('status');
 				$password = $this->input->post('password');
 				$data['password'] = password_hash($password, PASSWORD_DEFAULT);
 				

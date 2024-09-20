@@ -53,6 +53,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</div>
 
                                 <div class="form-group">
+                                    <label>Select User Status<span style="color:#FF0000;"><sup>*</sup></span></label>
+                                    <select name="status" id="status" class="form-control status">
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
 									<label>Enter Password<span style="color:#FF0000;"><sup>*</sup></span></label>
 									<input type="password" id="password" name="password" class="form-control password" placeholder="Enter User Password" required>
 								</div>
@@ -65,11 +73,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <input type="submit" name="submit" class="btn btn-primary sav-chng" />
                             </div>
                             <?php echo form_close();  ?>
-                            <!-- /.modal-content -->
                         </div>
-                        <!-- /.modal-dialog -->
                     </div>
                 </div>
+                <!-- Add user model end -->
 
                 <!--User Permissions Model -->
                 <div class="modal fade" id="userPermissionsModal" tabindex="-1" role="dialog" aria-labelledby="permissionModalLabel" aria-hidden="true">
@@ -81,7 +88,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="modal-body">
                                 <div class="alert alert-danger alert-dismissable error1" style="display:none;"></div>
-
                                 <div class="form-group">
                                 <form action="" id="permissionsForm">
                                 <input type="hidden" id="user_id" name="user_id">
@@ -197,13 +203,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <input type="submit" name="submit" id="savePermissionsBtn" value="Save" class="btn btn-primary sav-chng" />
                             </div>
                             </form>
-                            <?php// echo form_close();  ?>
-                            <!-- /.modal-content -->
                         </div>
-                        <!-- /.modal-dialog -->
                     </div>
                 </div>
-                
+                <!-- End model of permission -->
+                 
+                <!-- Show table list -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         User Permissions List
@@ -220,6 +225,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <th class="text-center">Mobile</th>
                                         <th class="text-center hidden">Password</th>
                                         <th class="text-center">Permissions</th>
+                                        <th class="text-center">Status</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -227,6 +233,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <?php
                                     $i = 0;
                                     foreach ($result as $r) {
+                                        $status = ($r["status"] == 1) ? 'Active' : 'Inactive';
                                         echo "<tr>";
 										echo "";
 										echo "<td>" . ++$i . "</td>";
@@ -235,6 +242,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 										echo "<td class='mobile'>" . $r["mobile"] . "</td>";
                                         echo "<td class='password hidden'>" . $r["password"] . "</td>";
 										echo "<td class='add text-center'><button class='user_rights' data-id='{$r['id']}'>Set Rights</button></td>";
+										echo "<td class='status'>" . $status . "</td>";
 										echo "<td><a class=\"fa fa-pencil fa-fw editcap\" id='{$r['id']}' href='#'></a>&nbsp;&nbsp;&nbsp;<a class=\"fa fa-trash-o fa-fw delcap\" href='#' id='{$r['id']}'></a></td></tr>";
                                     }
                                     ?>
@@ -298,12 +306,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		var name = $(this).closest('tr').find('td.name').html();
 		var mobile = $(this).closest('tr').find('td.mobile').html();
 		var email = $(this).closest('tr').find('td.email').html();
+		var status = $(this).closest('tr').find('td.status').html();
 		var password = $(this).closest('tr').find('td.password').html();
+        var statusValue = (status === "Active") ? "1" : "0";
 
         // and set them in the modal
 		$('.name', myModal).val(name);
 		$('.email', myModal).val(email);
 		$('.mobile', myModal).val(mobile);
+		$('.status', myModal).val(statusValue);
 		$('.password', myModal).val(password);
 		$('.sav-typ', myModal).val('edit');
 		$('.id', myModal).val(id);
