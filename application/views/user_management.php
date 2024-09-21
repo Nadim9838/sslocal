@@ -55,6 +55,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="form-group">
                                     <label>Select User Status<span style="color:#FF0000;"><sup>*</sup></span></label>
                                     <select name="status" id="status" class="form-control status">
+                                        <option selected value="">Select User Status</option>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>
@@ -336,6 +337,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         $('.email', myModal1).val('');
         $('.mobile', myModal1).val('');
         $('.password', myModal1).val('');
+        $('.status', myModal1).val('');
         $('.id', myModal1).val('0');
         $('.sav-typ', myModal1).val('new');
         $(".error1", myModal1).css("display", "none");

@@ -21,7 +21,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div id="flash-message" style="">
                     <?php echo $this->session->flashdata('msg'); ?>  
                 </div>
-                <!-- Modal -->
 
                 <!-- Modal -->
                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -48,18 +47,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 								</div>
 
                                 <div class="form-group">
-									<label>Enter EMEI Number<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" id="emei_number" name="emei_number" class="form-control emei_number" placeholder="Enter EMEI Number" required>
-								</div>
-
-                                <div class="form-group">
-									<label>Enter App Series<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" id="app_series" name="app_series" class="form-control app_series" placeholder="Enter App Series" required>
+									<label>Enter IMEI Number<span style="color:#FF0000;"><sup>*</sup></span></label>
+									<input type="text" id="imei_number" name="imei_number" maxlength="15" class="form-control imei_number" placeholder="Enter IMEI Number" required>
 								</div>
 
                                 <div class="form-group">
                                     <label>Select Mobile Status<span style="color:#FF0000;"><sup>*</sup></span></label>
                                     <select name="status" id="status" class="form-control status">
+                                        <option Selected value="">Select Mobile Status</option>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                     </select>
@@ -87,9 +82,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <h4 class="modal-title" id="permissionModalLabel">Add Social Media Accounts</h4>
                             </div>
                             <div class="modal-body">
-                                <div class="alert alert-danger alert-dismissable error1" style="display:none;"></div>
-                                <form action="" id="socialMediaForm">
-
+                              <div class="alert alert-danger alert-dismissable error1" style="display:none;"></div>
+                              <form action="" id="socialMediaForm">
                                 <div class="form-group form-control">
                                     <input type="hidden" id="user_id" name="user_id">
                                     <label>Select Social Media Plateform<span style="color:#FF0000;"><sup>*</sup></span></label>
@@ -116,17 +110,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <input type="hidden" name="sav-typ" class="sav-typ" value="">
                                 <input type="hidden" name="id" class="id">
                             </div>
-
                             <div class="modal-footer">
-                                <input type="submit" name="submit" id="savePermissionsBtn" value="Save" class="btn btn-primary sav-chng" />
+                                <input type="submit" name="submit" id="saveAccountsBtn" value="Save" class="btn btn-primary sav-chng" />
                             </div>
-                            </form>
-                            <?php// echo form_close();  ?>
-                            <!-- /.modal-content -->
+                          </form>
                         </div>
-                        <!-- /.modal-dialog -->
                     </div>
                 </div>
+                <!-- model end -->
 
                 <!-- Show table list  -->
                 <div class="panel panel-default">
@@ -143,8 +134,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <th class="text-center">Mobile Id</th>
                                         <th class="text-center">Company & Model</th>
                                         <th class="text-center">Android Version</th>
-                                        <th class="text-center">EMEI Number</th>
-                                        <th class="text-center">App Series</th>
+                                        <th class="text-center">IMEI Number</th>
                                         <th class="text-center">No. of Social Media Accounts</th>
                                         <th class="text-center">Validate</th>
                                         <th class="text-center">Status</th>
@@ -160,11 +150,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 										echo "";
 										echo "<td>" . ++$i . "</td>";
 										echo "<td class='date_time'>" . $r["date_time"] . "</td>";
-										echo "<td class='id'>" . $r["id"] . "</td>";
+										echo "<td class='id'>Mob" . $r["id"] ."</td>";
 										echo "<td class='company_model'>" . $r["company_model"] . "</td>";
 										echo "<td class='android_version'>" . $r["android_version"] . "</td>";
-										echo "<td class='emei_number'>" . $r["emei_number"] . "</td>";
-                                        echo "<td class='app_series'>" . $r["app_series"] . "</td>";
+										echo "<td class='imei_number'>" . $r["imei_number"] . "</td>";
 										echo "<td class='add text-center'><button class='user_rights' data-id='{$r['id']}'>Add Social Accounts</button></td>";
 										echo "<td class='add text-center'><button class='user_rights' data-id='{$r['id']}'>Validate Accounts</button></td>";
                                         echo "<td class='status'>" . $status . "</td>";
@@ -230,15 +219,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		var id = $(this).attr('id');
 		var company_model = $(this).closest('tr').find('td.company_model').html();
 		var android_version = $(this).closest('tr').find('td.android_version').html();
-		var emei_number = $(this).closest('tr').find('td.emei_number').html();
-		var app_series = $(this).closest('tr').find('td.app_series').html();
+		var imei_number = $(this).closest('tr').find('td.imei_number').html();
 		var status = $(this).closest('tr').find('td.status').html();
         var statusValue = (status === "Active") ? "1" : "0";
         // and set them in the modal
 		$('.company_model', myModal).val(company_model);
 		$('.android_version', myModal).val(android_version);
-		$('.emei_number', myModal).val(emei_number);
-		$('.app_series', myModal).val(app_series);
+		$('.imei_number', myModal).val(imei_number);
 		$('.status', myModal).val(statusValue);
 		$('.sav-typ', myModal).val('edit');
 		$('.id', myModal).val(id);
@@ -324,7 +311,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         });
 
         // Save user Permissions
-        $('#savePermissionsBtn').click(function() {
+        $('#saveAccountsBtn').click(function() {
             var formData = $('#socialMediaForm').serialize();
             $.ajax({
                 url: '<?= base_url("home/set_user_permissions") ?>',

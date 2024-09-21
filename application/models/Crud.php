@@ -111,7 +111,7 @@ class Crud extends CI_Model
     // Add new mobile
 	public function insert_mobile($data)
 	{
-		$this->db->insert('login', $data);
+		$this->db->insert('mobile_management', $data);
 		return $this->db->affected_rows();
 	}
 
@@ -119,26 +119,38 @@ class Crud extends CI_Model
 	public function edit_mobile($data)
 	{
 		$this->db->where('id', $data["id"]);
-		$this->db->update('login', $data);
+		$this->db->update('mobile_management', $data);
 		return $this->db->affected_rows();
 	}
 
-    // Delete mobile
-	public function delete_mobile($mobileId)
+    // Delete data common function
+	public function deleteCommonFunction($userId, $tableName)
 	{
-		$this->db->where('id', $mobileId);
-		$this->db->delete('login');
-
-		$this->db->where('mobile_id', $mobileId);
-    	$query = $this->db->get('mobile_permissions');
-
-		// If mobileId exists, delete the mobile from mobile_permissions table
-		if ($query->num_rows() > 0) {
-			$this->db->where('mobile_id', $mobileId);
-			$this->db->delete('mobile_permissions');
-		}
-
+		$this->db->where('id', $userId);
+		$this->db->delete($tableName);
         return true;
+	}
+
+	// Get facebook management data
+	public function get_facebook_management_data()
+	{
+		$query = $this->db->select('*')->from('facebook_management')->get();
+		return $query->result_array();
+	}
+
+    // Add new facebook
+	public function insert_facebook($data)
+	{
+		$this->db->insert('facebook_management', $data);
+		return $this->db->affected_rows();
+	}
+
+    // Update facebook
+	public function edit_facebook($data)
+	{
+		$this->db->where('id', $data["id"]);
+		$this->db->update('facebook_management', $data);
+		return $this->db->affected_rows();
 	}
 
 
