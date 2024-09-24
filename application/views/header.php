@@ -24,8 +24,13 @@
     <link rel="stylesheet" type="text/css" media="all" href="<?php echo base_url(); ?>assets/header/css/daterangepicker-bs3.css" />
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/header/css/blueimp-gallery.min.css">
     
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Select2 CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <!-- Bootstrap Core JavaScript -->
-    <script src="<?php echo base_url(); ?>assets/header/js/jquery-1.11.0.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/header/js/moment.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/header/js/daterangepicker.js"></script>
 
@@ -37,10 +42,6 @@
     <script src="<?php echo base_url(); ?>assets/header/js/plugins/morris/morris.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/header/js/plugins/morris/morris-data.js"></script>
 
-    <!-- Custom JavaScript -->
-    
-    <script src="<?php echo base_url(); ?>assets/header/js/plugins/dataTables/jquery-2.1.4.min.js"></script>
-    
     <!-- Bootstrap Core JavaScript -->
     <script src="<?php echo base_url(); ?>assets/header/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/header/js/moment.js"></script>

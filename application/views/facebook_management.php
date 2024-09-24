@@ -8,8 +8,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
     #facebook_management {
         background-color: #eee;
     }
-    .hidden {
-        display: none;
+    .year-filter-container {
+        text-align: right;
+        margin-bottom: 10px;
     }
 </style>
 <!-- Begin Page Content -->
@@ -38,72 +39,82 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="form-group">
 									<label>Enter Name<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" id="name" name="name" class="form-control name" placeholder="Enter Name" required>
+									<input type="text" name="name" id="name" class="form-control name" placeholder="Enter Name" required>
 								</div>
 
                                 <div class="form-group">
 									<label>Enter Profile Link<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" id="profile_link" name="profile_link" class="form-control profile_link" placeholder="Enter Profile Link" required>
+									<input type="text" name="profile_link" id="profile_link" class="form-control profile_link" placeholder="Enter Profile Link" required>
 								</div>
 
                                 <div class="form-group">
 									<label>Enter Facebook Id<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" id="facebook_id" name="facebook_id" class="form-control facebook_id" placeholder="Enter Facebook Id" required>
+									<input type="text" name="account_id" id="account_id" class="form-control account_id" placeholder="Enter Facebook Id" required>
 								</div>
 
                                 <div class="form-group">
 									<label>Enter Password<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="password" id="password" name="password" class="form-control password" placeholder="Enter Password" required>
+									<input type="password" name="password" id="password" class="form-control password" placeholder="Enter Password" required>
 								</div>
 
                                 <div class="form-group">
 									<label>Enter Mobile Number<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="number" id="mobile" name="mobile" maxlength="10" class="form-control mobile" placeholder="Enter Facebook Id" required>
+									<input type="number" name="mobile"id="mobile" class="form-control mobile" placeholder="Enter Mobile Number" required>
 								</div>
 
                                 <div class="form-group">
 									<label>Enter Email Id<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="email" id="email" name="email" class="form-control email" placeholder="Enter Facebook Id" required>
+									<input type="email" name="email" id="email" class="form-control email" placeholder="Enter Email Id" required>
 								</div>
 
                                 <div class="form-group">
                                     <label>Select Gender<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <select name="gender" id="gender" class="form-control gender">
+                                    <select name="gender" id="gender" class="form-control gender" required>
                                         <option Selected value="">Select Gender</option>
                                         <option value="male">Male</option>
                                         <option value="female">Female</option>
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
+
+                                <div class="form-group">
+									<label>Enter Religion<span style="color:#FF0000;"><sup>*</sup></span></label>
+									<input type="religion" id="religion" name="religion" class="form-control email" placeholder="Enter Religion" required>
+								</div>
                                 
                                 <div class="form-group">
                                     <label>Enter Date of Birth<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <input type="date" id="dob" name="dob" class="form-control dob" placeholder="Enter Date DOB" required>
+                                    <input type="date" name="dob" id="dob" class="form-control dob" placeholder="Enter Date of Birth" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Enter Age<span style="color:#FF0000;"><sup>*</sup></span></label>
+                                    <input type="int" name="age" id="age" value='age' readonly class="form-control age" placeholder="Enter age" required>
                                 </div>
 
                                 <div class="form-group">
 									<label>Enter Location<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" id="location" name="location" class="form-control location" placeholder="Enter Location" required>
+									<input type="text" name="location" id="location" class="form-control location" placeholder="Enter Location" required>
 								</div>
                                 
                                 <div class="form-group">
 									<label>Enter City<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" id="city" name="city" class="form-control city" placeholder="Enter City" required>
+									<input type="text" name="city" id="city" class="form-control city" placeholder="Enter City" required>
 								</div>
 
                                 <div class="form-group">
 									<label>Enter State<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" id="state" name="state" class="form-control state" placeholder="Enter State" required>
+									<input type="text" name="state" id="state" class="form-control state" placeholder="Enter State" required>
 								</div>
 
                                 <div class="form-group">
 									<label>Enter No. of Friends<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="number" id="friends" name="friends" class="form-control friends" placeholder="Enter No. of Friends" required>
+									<input type="number" name="friends" id="friends" class="form-control friends" placeholder="Enter No. of Friends" required>
 								</div>
 
                                 <div class="form-group">
                                     <label>Selec Status<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <select name="status" id="status" class="form-control status">
+                                    <select name="status" id="status" class="form-control status" required>
                                         <option Selected value="">Select Status</option>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
@@ -130,6 +141,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="panel-body">
                         <div class="table-responsive">
+                            <!-- Year wise table data filtering -->
+                            <div class="year-filter-container">
+                                <label for="yearFilter">Filter by Year:</label>
+                                <select id="yearFilter">
+                                    <option value="">All</option>
+                                    <?php 
+                                        $years = []; 
+                                        foreach ($result as $r) {
+                                            $year = substr($r["date_time"], 0, 4);
+                                            $years[] = $year;
+                                        }
+                                        $uniqueYears = array_unique($years);
+                                        foreach($uniqueYears as $year) {
+                                            echo '<option value="'.$year.'">'.$year.'</option>';
+                                        }
+                                    ?>
+                                </select>
+                            </div>
                             <table class="table table-striped table-bordered table-hover dt-responsive text-center" id="dataTables-example">
                                 <thead>
                                     <tr>
@@ -138,7 +167,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <th class="text-center">Account Code</th>
                                         <th class="text-center">Name</th>
                                         <th class="text-center">Profile Link</th>
-                                        <th class="text-center">ID</th>
+                                        <th class="text-center">Account ID</th>
                                         <th class="text-center">Password</th>
                                         <th class="text-center">Mobile No.</th>
                                         <th class="text-center">Email ID</th>
@@ -159,14 +188,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     $i = 0;
                                     foreach ($result as $r) {
                                         $status = ($r["status"] == 1) ? 'Active' : 'Inactive';
+                                        $createdAt = date('d/m/Y H:i:s', strtotime($r['date_time']));
                                         echo "<tr>";
 										echo "";
 										echo "<td>" . ++$i . "</td>";
-										echo "<td class='date_time'>" . $r["date_time"] . "</td>";
+										echo "<td class='date_time'>" . $createdAt . "</td>";
 										echo "<td class='id'>FB00" . $r["id"] ."</td>";
 										echo "<td class='name'>" . $r["name"] . "</td>";
 										echo "<td class='profile_link'>" . $r["profile_link"] . "</td>";
-										echo "<td class='facebook_id'>" . $r["facebook_id"] . "</td>";
+										echo "<td class='account_id'>" . $r["account_id"] . "</td>";
 										echo "<td class='password'>" . $r["password"] . "</td>";
 										echo "<td class='mobile'>" . $r["mobile"] . "</td>";
 										echo "<td class='email'>" . $r["email"] . "</td>";
@@ -199,6 +229,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
     $('#dataTables-example').dataTable({
         dom: 'Bfrtip',
         buttons: ['copy', 'excel', 'pdf'],
+        columnDefs: [{
+            width: 'auto',
+            targets: 12
+        }],
         "ordering": true,
         buttons: true,
         "pageLength": 15,
@@ -239,15 +273,37 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		var myModal = $('#myModal');
 		// now get the values from the table
 		var id = $(this).attr('id');
-		var company_model = $(this).closest('tr').find('td.company_model').html();
-		var android_version = $(this).closest('tr').find('td.android_version').html();
-		var imei_number = $(this).closest('tr').find('td.imei_number').html();
+		var name = $(this).closest('tr').find('td.name').html();
+		var profile_link = $(this).closest('tr').find('td.profile_link').html();
+		var account_id = $(this).closest('tr').find('td.account_id').html();
+		var password = $(this).closest('tr').find('td.password').html();
+		var mobile = $(this).closest('tr').find('td.mobile').html();
+		var email = $(this).closest('tr').find('td.email').html();
+		var gender = $(this).closest('tr').find('td.gender').html();
+		var religion = $(this).closest('tr').find('td.religion').html();
+		var dob = $(this).closest('tr').find('td.dob').html();
+		var age = $(this).closest('tr').find('td.age').html();
+		var location = $(this).closest('tr').find('td.location').html();
+		var city = $(this).closest('tr').find('td.city').html();
+		var state = $(this).closest('tr').find('td.state').html();
+		var friends = $(this).closest('tr').find('td.friends').html();
 		var status = $(this).closest('tr').find('td.status').html();
         var statusValue = (status === "Active") ? "1" : "0";
         // and set them in the modal
-		$('.company_model', myModal).val(company_model);
-		$('.android_version', myModal).val(android_version);
-		$('.imei_number', myModal).val(imei_number);
+		$('.name', myModal).val(name);
+		$('.profile_link', myModal).val(profile_link);
+		$('.account_id', myModal).val(account_id);
+		$('.password', myModal).val(password);
+		$('.mobile', myModal).val(mobile);
+		$('.email', myModal).val(email);
+		$('.gender', myModal).val(gender);
+		$('.religion', myModal).val(religion);
+		$('.dob', myModal).val(dob);
+		$('.age', myModal).val(age);
+		$('.location', myModal).val(location);
+		$('.city', myModal).val(city);
+		$('.state', myModal).val(state);
+		$('.friends', myModal).val(friends);
 		$('.status', myModal).val(statusValue);
 		$('.sav-typ', myModal).val('edit');
 		$('.id', myModal).val(id);
@@ -265,20 +321,66 @@ defined('BASEPATH') or exit('No direct script access allowed');
     // Add new users
     $('button.add_new').on('click', function() {
         var myModal1 = $('#myModal');
-        $('.name', myModal1).val('');
-        $('.email', myModal1).val('');
-        $('.facebook', myModal1).val('');
-        $('.password', myModal1).val('');
+        $('.name', myModal).val('');
+		$('.profile_link', myModal).val('');
+		$('.account_id', myModal).val('');
+		$('.password', myModal).val('');
+		$('.mobile', myModal).val('');
+		$('.email', myModal).val('');
+		$('.gender', myModal).val('');
+		$('.religion', myModal).val('');
+		$('.dob', myModal).val('');
+		$('.age', myModal).val('');
+		$('.location', myModal).val('');
+		$('.city', myModal).val('');
+		$('.state', myModal).val('');
+		$('.friends', myModal).val('');
+		$('.status', myModal).val('');
         $('.id', myModal1).val('0');
         $('.sav-typ', myModal1).val('new');
         $(".error1", myModal1).css("display", "none");
         myModal1.modal({
             show: true
         });
-        $("#myModalLabel").text("Add Facebook Details");
+        $("#myModalLabel").text("Add Facebook Account Details");
         return false;
     });
 
+    $(document).ready(function(){
+        // Year wise filtering
+        $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+                var selectedYear = $('#yearFilter').val(); 
+                var dateTime = data[1];
+                if (!dateTime) return false;
+                
+                var year = dateTime.substring(6, 10);
+                // Compare the extracted year with the selected year
+                if (selectedYear === "" || year === selectedYear) {
+                    return true;
+                }
+                return false;
+            }
+        );
+        var table = $('#dataTables-example').DataTable();
+        // Event listener to the year filter dropdown
+        $('#yearFilter').on('change', function() {
+            table.draw();
+        });
+
+        $('#dob').on('change', function(){
+            var dob = new Date($(this).val());
+            var today = new Date();
+            var age = today.getFullYear() - dob.getFullYear();
+            var monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            
+            $('#age').val(age);
+        });
+    });
 </script>
 
 </body>

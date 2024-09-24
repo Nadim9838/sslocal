@@ -153,5 +153,38 @@ class Crud extends CI_Model
 		return $this->db->affected_rows();
 	}
 
+	// Get total acounts added
+	public function getTotalAccounts($tableName) {
+		$total = $this->db->count_all($tableName);
+		return $total;
+	}
 
+	// Fetch social media accounts
+	public function fetch_social_accounts($table) {
+		$this->db->where('availability', 1);
+		$query = $this->db->get($table);
+		$output = '<option value="">Select Account</option>';
+		foreach ($query->result() as $row) {
+			$output .= '<option value="' . $row->account_id . '">' . $row->account_id . '</option>';
+		}
+		return $output;
+	}
+	
+	// Save social media social accounts 
+	public function save_mobile_accounts($mobileId, $data) {
+
+		$this->db->where('mobile_id', $mobileId);
+		$this->db->delete('social_media_accounts');
+
+		$this->db->insert_batch('social_media_accounts', $data);
+		return true;
+	}
+
+	// Update the availability flag 0
+	public function update_facebook_availability($account, $table) {
+		$this->db->where('account_id', $account);
+		$this->db->update($table, ['availability' => 0]);
+	
+		return true;
+	}
 }

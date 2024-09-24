@@ -8,8 +8,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
     #mobile_management {
         background-color: #eee;
     }
-    .hidden {
-        display: none;
+    .year-filter-container {
+        text-align: right;
+        margin-bottom: 10px;
+    }
+    #account-fields-container .form-group {
+        margin-bottom: 5px !important;
+    }
+    #account-fields-container .form-group .child-plateform {
+        padding-right:20px !important;
+    }
+    .select2-results {
+        max-height: 100px;
+        overflow-y: auto;
+    }
+    .account-select {
+        width: 150px !important;
+    }
+    .social-modal-footer {
+        padding: 90px 0px 0px 0px !important;
     }
 </style>
 <!-- Begin Page Content -->
@@ -53,7 +70,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="form-group">
                                     <label>Select Mobile Status<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <select name="status" id="status" class="form-control status">
+                                    <select name="status" id="status" class="form-control status" required>
                                         <option Selected value="">Select Mobile Status</option>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
@@ -83,35 +100,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="modal-body">
                               <div class="alert alert-danger alert-dismissable error1" style="display:none;"></div>
-                              <form action="" id="socialMediaForm">
-                                <div class="form-group form-control">
-                                    <input type="hidden" id="user_id" name="user_id">
-                                    <label>Select Social Media Plateform<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <select name="status" id="status">
+                              <?php echo form_open('home/save_mobile_accounts', ['id'=>'socialMediaForm', 'class'=>'form-inline']); ?>
+                                <div id="account-fields-container">
+                                  <div class="form-group">
+                                    <input type="hidden" id="mobile_id" name="mobile_id" class="mobile_id">
+                                    
+                                    <select name="platform[]" id="plateform" class="form-control platform-select">
+                                        <option value="" selected>Select Social Media Plateform</option>
                                         <option value="facebook">Facebook</option>
                                         <option value="instagram">Instagram</option>
                                         <option value="twitter">Twitter</option>
                                         <option value="youtube">Youtube</option>
-                                        <option value="tiktok">Tik Tok</option>
-                                        <option value="whatsapp">WhatsApp</option>
                                     </select>
-                                    <label>Select Accounts<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <select name="accounts" id="accounts">
-                                        <option value="facebook">Account1</option>
-                                        <option value="instagram">Account2</option>
-                                        <option value="twitter">Account3</option>
-                                        <option value="youtube">Account4</option>
-                                        <option value="tiktok">Account5</option>
-                                        <option value="whatsapp">Account6</option>
+                                    
+                                    <select name="app_series[]" id="app_series" class="form-control app-series-select">
+                                        <option value="" selected>Select App Series</option>
                                     </select>
-                                    <button>+</button>
+                                    
+                                    <select name="accounts[]" id="accounts" class="form-control account-select">
+                                        <option value="" selected>Select Account</option>
+                                    </select>
+                                    <button type="button" class="btn btn-secondary" style="padding: 6px 20px; background-color: green; color: white;" id="addFieldBtn">+</button>
                                 </div>
 
                                 <input type="hidden" name="sav-typ" class="sav-typ" value="">
                                 <input type="hidden" name="id" class="id">
-                            </div>
-                            <div class="modal-footer">
-                                <input type="submit" name="submit" id="saveAccountsBtn" value="Save" class="btn btn-primary sav-chng" />
+                              </div>
+                              <div class="modal-footer social-modal-footer">
+                                <input type="submit" name="submit" id="saveAccountsBtn" style="margin-left:200px;" value="Save" class="btn btn-primary sav-chng" />
+                              </div>
                             </div>
                           </form>
                         </div>
@@ -126,6 +143,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="panel-body">
                         <div class="table-responsive">
+                            <!-- Year wise table data filtering -->
+                            <div class="year-filter-container">
+                                <label for="yearFilter">Filter by Year:</label>
+                                <select id="yearFilter">
+                                    <option value="">All</option>
+                                    <?php 
+                                        $years = []; 
+                                        foreach ($result as $r) {
+                                            $year = substr($r["date_time"], 0, 4);
+                                            $years[] = $year;
+                                        }
+                                        $uniqueYears = array_unique($years);
+                                        foreach($uniqueYears as $year) {
+                                            echo '<option value="'.$year.'">'.$year.'</option>';
+                                        }
+                                    ?>
+                                </select>
+                            </div>
                             <table class="table table-striped table-bordered table-hover dt-responsive text-center" id="dataTables-example">
                                 <thead>
                                     <tr>
@@ -135,6 +170,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <th class="text-center">Company & Model</th>
                                         <th class="text-center">Android Version</th>
                                         <th class="text-center">IMEI Number</th>
+                                        <th class="text-center">Facebook</th>
+                                        <th class="text-center">Instagram</th>
+                                        <th class="text-center">Twitter</th>
+                                        <th class="text-center">YouTube</th>
+                                        <th class="text-center">TikTok</th>
+                                        <th class="text-center">WhatsApp</th>
                                         <th class="text-center">No. of Social Media Accounts</th>
                                         <th class="text-center">Validate</th>
                                         <th class="text-center">Status</th>
@@ -146,16 +187,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     $i = 0;
                                     foreach ($result as $r) {
                                         $status = ($r["status"] == 1) ? 'Active' : 'Inactive';
+                                        $createdAt = date('d/m/Y H:i:s', strtotime($r['date_time']));
                                         echo "<tr>";
 										echo "";
 										echo "<td>" . ++$i . "</td>";
-										echo "<td class='date_time'>" . $r["date_time"] . "</td>";
+										echo "<td class='date_time'>" . $createdAt . "</td>";
 										echo "<td class='id'>Mob" . $r["id"] ."</td>";
 										echo "<td class='company_model'>" . $r["company_model"] . "</td>";
 										echo "<td class='android_version'>" . $r["android_version"] . "</td>";
 										echo "<td class='imei_number'>" . $r["imei_number"] . "</td>";
-										echo "<td class='add text-center'><button class='user_rights' data-id='{$r['id']}'>Add Social Accounts</button></td>";
-										echo "<td class='add text-center'><button class='user_rights' data-id='{$r['id']}'>Validate Accounts</button></td>";
+                                        echo "<td class='facebook'>".$totalFacebookAccount."</td>";
+                                        echo "<td class='instagram'>0</td>";
+                                        echo "<td class='twitter'>0</td>";
+                                        echo "<td class='youtube'>0</td>";
+                                        echo "<td class='tiktok'>0</td>";
+                                        echo "<td class='whatsapp'>0</td>";
+										echo "<td class='add text-center'><button class='user_rights' id='{$r['id']}'>Add Social Accounts</button></td>";
+										echo "<td class='add text-center'><button class='validate_accounts' id='{$r['id']}'>Validate Accounts</button></td>";
                                         echo "<td class='status'>" . $status . "</td>";
 										echo "<td><a class=\"fa fa-pencil fa-fw editcap\" id='{$r['id']}' href='#'></a>&nbsp;&nbsp;&nbsp;<a class=\"fa fa-trash-o fa-fw delcap\" href='#' id='{$r['id']}'></a></td></tr>";
                                     }
@@ -177,6 +225,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
     $('#dataTables-example').dataTable({
         dom: 'Bfrtip',
         buttons: ['copy', 'excel', 'pdf'],
+        columnDefs: [{
+            width: 'auto',
+            targets: 12
+        }],
         "ordering": true,
         buttons: true,
         "pageLength": 15,
@@ -259,68 +311,141 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     // Get user permissions
     $(document).ready(function() {
-        // Functionality when 'All' checkbox is clicked
-        $('.all-checkbox').change(function() {
-            var isChecked = $(this).is(':checked');
-            // Check/uncheck all permission checkboxes in the same row
-            $(this).closest('tr').find('.perm-checkbox').prop('checked', isChecked);
-        });
-
-        // Functionality when any individual permission checkbox is clicked
-        $('.perm-checkbox').change(function() {
-            var row = $(this).closest('tr');
-            var allChecked = row.find('.perm-checkbox:checked').length === row.find('.perm-checkbox').length;
-            
-            // If all individual checkboxes are checked, check the 'All' checkbox
-            row.find('.all-checkbox').prop('checked', allChecked);
-        });
-
         // When cancle user model referesh the page
         $('#userCancleModel').click(function() {
             location.reload();
         });
 
-        // Open Set Rights Modal
-        $('.user_rights').click(function() {
-            var userId = $(this).data('id');
-            $('#user_id').val(userId);
-
-            // Fetch current permissions
-            $.ajax({
-                url: '<?= base_url("home/get_user_permissions/") ?>' + userId,
-                method: 'GET',
-                success: function(response) {
-                    var permissions = JSON.parse(response);
-                    // Update checkbox values based on the fetched permissions
-                    $.each(permissions, function(index, perm) {
-                        var row = $('input[name="permissions['+ perm.permission +'][add]"]').closest('tr');
-
-                        row.find('input[name="permissions['+ perm.permission +'][add]"]').prop('checked', perm.add == 1);
-                        row.find('input[name="permissions['+ perm.permission +'][view]"]').prop('checked', perm.view == 1);
-                        row.find('input[name="permissions['+ perm.permission +'][edit]"]').prop('checked', perm.edit == 1);
-                        row.find('input[name="permissions['+ perm.permission +'][delete]"]').prop('checked', perm.delete == 1);
-
-                        // Check if all permissions (Add, View, Edit, Delete) are checked, then check the 'All' checkbox
-                        var allChecked = row.find('.perm-checkbox:checked').length === row.find('.perm-checkbox').length;
-                        row.find('.all-checkbox').prop('checked', allChecked);
-                    });
-                    // Show the modal
-                    $('#social_accounts').modal('show');
+        // Year wise filtering
+        $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+                var selectedYear = $('#yearFilter').val(); 
+                var dateTime = data[1];
+                if (!dateTime) return false;
+                
+                var year = dateTime.substring(6, 10);
+                // Compare the extracted year with the selected year
+                if (selectedYear === "" || year === selectedYear) {
+                    return true;
                 }
-            });
+                return false;
+            }
+        );
+        var table = $('#dataTables-example').DataTable();
+        // Event listener to the year filter dropdown
+        $('#yearFilter').on('change', function() {
+            table.draw();
         });
 
-        // Save user Permissions
-        $('#saveAccountsBtn').click(function() {
-            var formData = $('#socialMediaForm').serialize();
-            $.ajax({
-                url: '<?= base_url("home/set_user_permissions") ?>',
-                method: 'POST',
-                data: formData,
-                success: function(response) {
-                    $('#social_accounts').modal('hide');
-                }
+        // Open Set Rights Modal
+        $('.user_rights').click(function() {
+            // Show the modal
+            var id = $(this).attr('id');
+            var social_account_model = $('#social_accounts');
+            $('.mobile_id', social_account_model).val(id);
+
+            $('#social_accounts').modal('show');
+        });
+        
+        // Add new fields when + button is clicked
+        $('#addFieldBtn').click(function() {
+            var newAccountFields = `
+                <div class="form-group mt-5">
+                    <select name="platform[]" class="form-control platform-select child-plateform">
+                        <option value="" selected>Select Social Media Platform</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="youtube">YouTube</option>
+                    </select>
+                    <select name="app_series[]" class="form-control app-series-select">
+                        <option value="" selected>Select App Series</option>
+                    </select>
+                    <select name="accounts[]" class="form-control account-select">
+                        <option value="" selected>Select Account</option>
+                    </select>
+                    <button type="button" class="btn btn-danger removeFieldBtn" style="padding: 6px 20px; color: white;">-</button>
+                </div>
+            `;
+
+            // Append the new fields to the container
+            $('#account-fields-container').append(newAccountFields);
+        });
+
+        // Remove fields when - button is clicked
+        $('#account-fields-container').on('click', '.removeFieldBtn', function() {
+            $(this).closest('.form-group').remove();
+        });
+
+        var appSeriesOptions = {
+            facebook: [
+                { value: 'facebook1', text: 'Facebook1' },
+                { value: 'facebook2', text: 'Facebook2' }
+            ],
+            instagram: [
+                { value: 'instagram1', text: 'Instagram1' },
+                { value: 'instagram2', text: 'Instagram2' }
+            ],
+            twitter: [
+                { value: 'twitter1', text: 'Twitter1' },
+                { value: 'twitter2', text: 'Twitter2' }
+            ],
+            youtube: [
+                { value: 'youtube1', text: 'YouTube1' },
+                { value: 'youtube2', text: 'YouTube2' }
+            ]
+        };
+
+        $(document).on('change', '.platform-select', function() {
+            var platform = $(this).val();
+            var $appSeriesSelect = $(this).closest('.form-group').find('.app-series-select'); 
+            $appSeriesSelect.empty();
+            $appSeriesSelect.append('<option value="" selected>Select App Series</option>');
+
+            if (appSeriesOptions[platform]) {
+                $.each(appSeriesOptions[platform], function(index, option) {
+                    $appSeriesSelect.append('<option value="' + option.value + '">' + option.text + '</option>');
+                });
+            }
+        });
+
+        
+        // Fetch social accounts
+        $(document).on('change', '.app-series-select', function() {
+            // Initialize Select2 on account-select
+            $(document).ready(function() {
+                $('.account-select').select2({
+                    placeholder: "Select Account",
+                    allowClear: true
+                });
             });
+
+            var socialApp = $(this).val();
+            var selectAccount = $(this).closest('.form-group').find('.account-select');
+            if (socialApp != '') {
+                $.ajax({
+                    url: "<?php echo base_url(); ?>home/fetch_social_accounts",
+                    method: "POST",
+                    data: {
+                        social_app: socialApp
+                    },
+                    success: function(data) {
+                        selectAccount.html('');
+                        selectAccount.html(data);
+
+                        selectAccount.select2({
+                            placeholder: "Select Account",
+                            allowClear: true
+                        });
+                    }
+                });
+            } else {
+                selectAccount.html('<option value="">Select Account</option>');
+                selectAccount.select2({
+                    placeholder: "Select Account",
+                    allowClear: true
+                });
+            }
         });
     });
 

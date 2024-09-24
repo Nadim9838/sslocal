@@ -11,6 +11,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
     .hidden {
         display: none;
     }
+    .year-filter-container {
+        text-align: right;
+        margin-bottom: 10px;
+    }
 </style>
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -54,7 +58,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="form-group">
                                     <label>Select User Status<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <select name="status" id="status" class="form-control status">
+                                    <select name="status" id="status" class="form-control status" required>
                                         <option selected value="">Select User Status</option>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
@@ -214,13 +218,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="panel-heading">
                         User Permissions List
                     </div>
-                    <!-- /.panel-heading -->
                     <div class="panel-body">
                         <div class="table-responsive">
+                            <!-- Year wise table data filtering -->
+                            <div class="year-filter-container">
+                                <label for="yearFilter">Filter by Year:</label>
+                                <select id="yearFilter">
+                                    <option value="">All</option>
+                                    <?php 
+                                        $years = []; 
+                                        foreach ($result as $r) {
+                                            $year = substr($r["date_time"], 0, 4);
+                                            $years[] = $year;
+                                        }
+                                        $uniqueYears = array_unique($years);
+                                        foreach($uniqueYears as $year) {
+                                            echo '<option value="'.$year.'">'.$year.'</option>';
+                                        }
+                                    ?>
+                                </select>
+                            </div>
                             <table class="table table-striped table-bordered table-hover dt-responsive text-center" id="dataTables-example">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Sl No.</th>
+                                        <th class="text-center">Created At</th>
                                         <th class="text-center">Name</th>
                                         <th class="text-center">Email</th>
                                         <th class="text-center">Mobile</th>
@@ -235,9 +257,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     $i = 0;
                                     foreach ($result as $r) {
                                         $status = ($r["status"] == 1) ? 'Active' : 'Inactive';
+                                        $createdAt = date('d/m/Y H:i:s', strtotime($r['date_time']));
                                         echo "<tr>";
 										echo "";
 										echo "<td>" . ++$i . "</td>";
+										echo "<td class='createdAt'>" . $createdAt . "</td>";
 										echo "<td class='name'>" . $r["name"] . "</td>";
 										echo "<td class='email'>" . $r["email"] . "</td>";
 										echo "<td class='mobile'>" . $r["mobile"] . "</td>";
@@ -263,16 +287,46 @@ defined('BASEPATH') or exit('No direct script access allowed');
     // Data table attributes
     $('#dataTables-example').dataTable({
         dom: 'Bfrtip',
-        buttons: ['copy', 'excel', 'pdf'],
-        "ordering": true,
-        buttons: true,
-        "pageLength": 15,
-        "lengthMenu": [
+        buttons: [
+            {
+                extend: 'copy',
+                exportOptions: {
+                    columns: ':visible:not(:last-child)'
+                }
+            },
+            {
+                extend: 'csv',
+                exportOptions: {
+                    columns: ':visible:not(:last-child)'
+                }
+            },
+            {
+                extend: 'pdf',
+                exportOptions: {
+                    columns: ':visible:not(:last-child)',
+                    orientation: 'landscape',
+                    pageSize: 'A4'
+                }
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':visible:not(:last-child)',
+                    pageSize: 'A4'
+                }
+            }
+        ],
+        columnDefs: [{
+            width: '18%',
+            targets: 3
+        }],
+        ordering: true,
+        pageLength: 15,
+        lengthMenu: [
             [10, 25, 50, -1],
             [10, 25, 50, "All"]
         ],
-        "text":['center'],
-        "scrollX": true
+        scrollX: true
     });
 
     // Delete the user
@@ -350,6 +404,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     // Get user permissions
     $(document).ready(function() {
+        // Year wise filtering
+        $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+                var selectedYear = $('#yearFilter').val(); 
+                var dateTime = data[1];
+                if (!dateTime) return false;
+                
+                var year = dateTime.substring(6, 10);
+                // Compare the extracted year with the selected year
+                if (selectedYear === "" || year === selectedYear) {
+                    return true;
+                }
+                return false;
+            }
+        );
+        var table = $('#dataTables-example').DataTable();
+        // Event listener to the year filter dropdown
+        $('#yearFilter').on('change', function() {
+            table.draw();
+        });
+
         // Functionality when 'All' checkbox is clicked
         $('.all-checkbox').change(function() {
             var isChecked = $(this).is(':checked');

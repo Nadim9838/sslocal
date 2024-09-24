@@ -182,6 +182,7 @@ class Home extends CI_Controller {
 	{
 		if ($this->session->has_userdata('login')) {
 			$page['result'] = $this->Crud->get_mobile_management_data();
+			$page['totalFacebookAccount'] = $this->Crud->getTotalAccounts('facebook_management');
 			$this->load->view('header');
 			$this->load->view('mobile_management', $page);
 		} else {
@@ -269,17 +270,39 @@ class Home extends CI_Controller {
 	public function add_update_facebook() {
 		if ($this->session->has_userdata('login')) {
 			// Set validation rules
-			$this->form_validation->set_rules('company_model', 'Company Model', 'required');
-			$this->form_validation->set_rules('android_version', 'Android Version', 'required');
-			$this->form_validation->set_rules('imei_number', 'IMEI Number', 'required');
+			$this->form_validation->set_rules('name', 'Name', 'required');
+			$this->form_validation->set_rules('profile_link', 'Profile Link', 'required');
+			$this->form_validation->set_rules('account_id', 'Facebook Id', 'required');
+			$this->form_validation->set_rules('password', 'Password', 'required');
+			$this->form_validation->set_rules('mobile', 'Mobile', 'required');
+			$this->form_validation->set_rules('email', 'Email', 'required');
+			$this->form_validation->set_rules('gender', 'Gender', 'required');
+			$this->form_validation->set_rules('religion', 'Religion', 'required');
+			$this->form_validation->set_rules('dob', 'DOB', 'required');
+			$this->form_validation->set_rules('age', 'Age', 'required');
+			$this->form_validation->set_rules('location', 'Location', 'required');
+			$this->form_validation->set_rules('city', 'city', 'required');
+			$this->form_validation->set_rules('state', 'State', 'required');
+			$this->form_validation->set_rules('friends', 'Friends', 'required');
 			$this->form_validation->set_rules('status', 'Status', 'required');
 			if ($this->form_validation->run() == FALSE) {
 				$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">All fields are required!! Please try again.</div>');
 				redirect(base_url() . 'home/facebook_management', 'refresh');
 			} else {
-				$data['company_model'] = $this->input->post('company_model');
-				$data['android_version'] = $this->input->post('android_version');
-				$data['imei_number'] = $this->input->post('imei_number');
+				$data['name'] = $this->input->post('name');
+				$data['profile_link'] = $this->input->post('profile_link');
+				$data['account_id'] = $this->input->post('account_id');
+				$data['password'] = $this->input->post('password');
+				$data['mobile'] = $this->input->post('mobile');
+				$data['email'] = $this->input->post('email');
+				$data['gender'] = $this->input->post('gender');
+				$data['religion'] = $this->input->post('religion');
+				$data['dob'] = $this->input->post('dob');
+				$data['age'] = $this->input->post('age');
+				$data['location'] = $this->input->post('location');
+				$data['city'] = $this->input->post('city');
+				$data['state'] = $this->input->post('state');
+				$data['friends'] = $this->input->post('friends');
 				$data['status'] = $this->input->post('status');
 				
 				if ($this->input->post('sav-typ') == 'edit') {
@@ -328,5 +351,73 @@ class Home extends CI_Controller {
 			redirect(base_url() . 'home/login', 'refresh');
 		}
 	}
+	
+	// Fetch social media accounts
+	public function fetch_social_accounts()
+	{
+		if ($this->session->has_userdata('login')) {
+			if ($this->input->post('social_app')) {
+				$socialApp = $this->input->post('social_app');
+				$tableName = '';
+				if($socialApp == 'facebook1' || $socialApp == 'facebook2') {
+					$tableName = 'facebook_management';
+				} elseif($socialApp == 'instagram1' || $socialApp == 'instagram2') {
+					$tableName = 'instagram_management';
+				} elseif($socialApp == 'twitter1' || $socialApp == 'twitter2') {
+					$tableName = 'twitter_management';
+				} elseif($socialApp == 'youtube1' || $socialApp == 'youtube2') {
+					$tableName = 'youtube_management';
+				} elseif($socialApp == 'tiktok1' || $socialApp == 'tiktok2') {
+					$tableName = 'tiktok_management';
+				} elseif($socialApp == 'whatsapp1' || $socialApp == 'whatsapp2') {
+					$tableName = 'whatsapp_management';
+				}
 
+				echo $this->Crud->fetch_social_accounts($tableName);
+			}
+		} else {
+			redirect(base_url() . 'home/login', 'refresh');
+		}
+	}
+
+	// Save mobile social accounts
+	public function save_mobile_accounts() {
+		if ($this->session->has_userdata('login')) {
+			$platforms = $this->input->post('platform'); 
+			$app_series = $this->input->post('app_series');
+			$accounts = $this->input->post('accounts'); 
+			$mobileId = $this->input->post('mobile_id');
+			$tableName = '';
+
+			$data = [];
+			
+			foreach ($platforms as $key => $platform) {
+				$data[] = [
+					'mobile_id' => $mobileId,
+					'platform' => $platform,
+					'app_series' => $app_series[$key],
+					'account' => $accounts[$key],
+				];
+
+				if ($platform == 'facebook') {
+					$tableName = 'facebook_management';
+					$this->Crud->update_facebook_availability($accounts[$key], $tableName);
+				} elseif($platform == 'instagram') {
+					$tableName = 'instagram_management';
+					$this->Crud->update_instagram_availability($accounts[$key], $tableName);
+				}
+			}
+
+			$result = $this->Crud->save_mobile_accounts($mobileId, $data);
+			if($result) {
+				$this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Social Media Account Added Successfully.</div>');
+				redirect(base_url() . 'home/mobile_management', 'refresh');
+			} else {
+				$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Facebook Accounts Can\'t Added.</div>');
+				redirect(base_url() . 'home/mobile_management', 'refresh');
+			}
+		} else {
+			redirect(base_url() . 'home/login', 'refresh');
+		}
+	}
 }
