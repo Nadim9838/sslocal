@@ -34,14 +34,6 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/header/js/moment.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/header/js/daterangepicker.js"></script>
 
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="<?php echo base_url(); ?>assets/header/js/plugins/metisMenu/metisMenu.min.js"></script>
-
-    <!-- Morris Charts JavaScript -->
-    <script src="<?php echo base_url(); ?>assets/header/js/plugins/morris/raphael.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/header/js/plugins/morris/morris.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/header/js/plugins/morris/morris-data.js"></script>
-
     <!-- Bootstrap Core JavaScript -->
     <script src="<?php echo base_url(); ?>assets/header/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/header/js/moment.js"></script>
@@ -135,7 +127,24 @@
                             </li>
                         <?php } if (has_permission($userPermissions, 'facebook_management', 'view')) { ?>
                             <li>
-                                <a href="<?php echo base_url(); ?>home/facebook_management" id="facebook_management"><i class="fa fa-facebook fa-fw"></i>&nbsp; Facebook Management</a>
+                                <a href="<?php echo base_url(); ?>home/fb_account_management" id="facebook_management"><i class="fa fa-facebook fa-fw"></i>&nbsp; Facebook Management <span class="fa arrow"></span></a>
+                                <ul id="facebookSubmenu" class="nav nav-second-level collapse">
+                                    <li>
+                                        <a href="<?php echo base_url(); ?>home/fb_account_management">Facebook Account Management</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo base_url(); ?>home/fb_group_management">Facebook Group Management</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo base_url(); ?>home/fb_page_management">Facebook Page Management</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo base_url(); ?>home/fb_profile_management">Facebook Profile Management</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo base_url(); ?>home/fb_task_management">Facebook Task Management</a>
+                                    </li>
+                                </ul>
                             </li>
                         <?php } if (has_permission($userPermissions, 'insta_management', 'view')) { ?>
                             <li>

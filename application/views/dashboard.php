@@ -1,3 +1,14 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<head>
+        <!-- Metis Menu Plugin JavaScript -->
+        <script src="<?php echo base_url(); ?>assets/header/js/plugins/metisMenu/metisMenu.min.js"></script>
+
+        <!-- Morris Charts JavaScript -->
+        <script src="<?php echo base_url(); ?>assets/header/js/plugins/morris/raphael.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/header/js/plugins/morris/morris.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/header/js/plugins/morris/morris-data.js"></script>
+
+</head>
 <style>
     .sidebar ul li a.active {
         background: transparent;
@@ -6,10 +17,6 @@
         background-color: #eee;
     }
 </style>
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-?>
-
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
@@ -104,9 +111,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <i class="fa fa-youtube fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge" id="rep_sent">
-
-                            </div>
+                            <div class="huge" id="rep_sent"></div>
                             <div>Youtube</div>
                         </div>
                     </div>
@@ -131,12 +136,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
         </div>
     </div>
+  </div>
 </div>
-<!-- /#page-wrapper -->
-
-</div>
-<!-- /#wrapper -->
-
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -240,5 +241,4 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </script>
 
 </body>
-
 </html>

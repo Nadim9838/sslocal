@@ -1,6 +1,4 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-?>
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <style>
     .sidebar ul li a.active {
         background: transparent;
@@ -70,7 +68,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="form-group">
                                     <label>Select Mobile Status<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <select name="status" id="status" class="form-control status" required>
+                                    <select name="status" id="status" class="form-control status">
                                         <option Selected value="">Select Mobile Status</option>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
@@ -95,42 +93,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" id="userCancleModel" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="permissionModalLabel">Add Social Media Accounts</h4>
+                                <button type="button" class="close" id="userCancleModal" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="permissionModalLabel">View & Add Social Media Accounts</h4>
                             </div>
                             <div class="modal-body">
                               <div class="alert alert-danger alert-dismissable error1" style="display:none;"></div>
                               <?php echo form_open('home/save_mobile_accounts', ['id'=>'socialMediaForm', 'class'=>'form-inline']); ?>
                                 <div id="account-fields-container">
-                                  <div class="form-group">
-                                    <input type="hidden" id="mobile_id" name="mobile_id" class="mobile_id">
-                                    
-                                    <select name="platform[]" id="plateform" class="form-control platform-select">
-                                        <option value="" selected>Select Social Media Plateform</option>
-                                        <option value="facebook">Facebook</option>
-                                        <option value="instagram">Instagram</option>
-                                        <option value="twitter">Twitter</option>
-                                        <option value="youtube">Youtube</option>
-                                    </select>
-                                    
-                                    <select name="app_series[]" id="app_series" class="form-control app-series-select">
-                                        <option value="" selected>Select App Series</option>
-                                    </select>
-                                    
-                                    <select name="accounts[]" id="accounts" class="form-control account-select">
-                                        <option value="" selected>Select Account</option>
-                                    </select>
-                                    <button type="button" class="btn btn-secondary" style="padding: 6px 20px; background-color: green; color: white;" id="addFieldBtn">+</button>
-                                </div>
-
-                                <input type="hidden" name="sav-typ" class="sav-typ" value="">
-                                <input type="hidden" name="id" class="id">
+                                <input type="hidden" id="mobile_id" name="mobile_id" class="mobile_id">
                               </div>
                               <div class="modal-footer social-modal-footer">
                                 <input type="submit" name="submit" id="saveAccountsBtn" style="margin-left:200px;" value="Save" class="btn btn-primary sav-chng" />
                               </div>
                             </div>
-                          </form>
+                            <?php echo form_close();?>
                         </div>
                     </div>
                 </div>
@@ -176,7 +152,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <th class="text-center">YouTube</th>
                                         <th class="text-center">TikTok</th>
                                         <th class="text-center">WhatsApp</th>
-                                        <th class="text-center">No. of Social Media Accounts</th>
+                                        <th class="text-center">Social Media Accounts</th>
                                         <th class="text-center">Validate</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Action</th>
@@ -202,7 +178,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         echo "<td class='youtube'>0</td>";
                                         echo "<td class='tiktok'>0</td>";
                                         echo "<td class='whatsapp'>0</td>";
-										echo "<td class='add text-center'><button class='user_rights' id='{$r['id']}'>Add Social Accounts</button></td>";
+										echo "<td class='add text-center'><button class='add_social_account' id='{$r['id']}'>Add Social Accounts</button></td>";
 										echo "<td class='add text-center'><button class='validate_accounts' id='{$r['id']}'>Validate Accounts</button></td>";
                                         echo "<td class='status'>" . $status . "</td>";
 										echo "<td><a class=\"fa fa-pencil fa-fw editcap\" id='{$r['id']}' href='#'></a>&nbsp;&nbsp;&nbsp;<a class=\"fa fa-trash-o fa-fw delcap\" href='#' id='{$r['id']}'></a></td></tr>";
@@ -240,7 +216,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         "scrollX": true
     });
 
-    // Delete the mobile
+    // Delete the mobile details
     $(".delcap").on('click', function() {
         var uid = $(this).attr('id');
         $.confirm({
@@ -264,8 +240,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         });
     });
 
-    // Edit the mobile
+    // Edit the mobile details
     $('a.editcap').on('click', function() {
+        $('#status').closest('.form-group').show();
 		var myModal = $('#myModal');
 		// now get the values from the table
 		var id = $(this).attr('id');
@@ -292,8 +269,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		return false;
 	});
 
-    // Add new users
+    // Add new mobile details
     $('button.add_new').on('click', function() {
+        $('#status').closest('.form-group').hide();
         var myModal1 = $('#myModal');
         $('.name', myModal1).val('');
         $('.email', myModal1).val('');
@@ -309,10 +287,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
         return false;
     });
 
-    // Get user permissions
     $(document).ready(function() {
-        // When cancle user model referesh the page
-        $('#userCancleModel').click(function() {
+        // Outside the modal not clickable 
+        $('#myModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: false
+        });
+
+        // Outside the social account modal not clickable 
+        $('#social_accounts').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: false
+        });
+
+        // Relode the page when close the model
+        $('#userCancleModal').click(function() {
             location.reload();
         });
 
@@ -337,31 +328,101 @@ defined('BASEPATH') or exit('No direct script access allowed');
             table.draw();
         });
 
-        // Open Set Rights Modal
-        $('.user_rights').click(function() {
-            // Show the modal
+        // Open add social media account modal
+        $('.add_social_account').click(function() {
             var id = $(this).attr('id');
             var social_account_model = $('#social_accounts');
-            $('.mobile_id', social_account_model).val(id);
+            social_account_model.find('#mobile_id').val(id);
 
+            // Fetch saved data via AJAX
+            $.ajax({
+                url: '<?php echo base_url(). "home/get_saved_social_media_accounts" ?>',
+                type: 'POST',
+                data: { mobile_id: id },
+                dataType: 'json',
+                success: function (response) {
+                    // Populate the modal with saved accounts
+                    if (response && response.saved_accounts.length > 0) {
+                        response.saved_accounts.forEach(function (account, index) {
+                            var savedAccountFields = `
+                                <div class="form-group">
+                                    <select name="platform[]" class="form-control platform-select" required>
+                                        <option value="">Select Social Media Platform</option>
+                                        <option value="facebook" ${account.platform === 'facebook' ? 'selected' : ''}>Facebook</option>
+                                        <option value="instagram" ${account.platform === 'instagram' ? 'selected' : ''}>Instagram</option>
+                                        <option value="twitter" ${account.platform === 'twitter' ? 'selected' : ''}>Twitter</option>
+                                        <option value="youtube" ${account.platform === 'youtube' ? 'selected' : ''}>YouTube</option>
+                                    </select>
+                                    <select name="app_series[]" class="form-control app-series-select" required>
+                                        <option value="">Select App Series</option>
+                                        <option value="${account.app_series}" selected>${account.app_series}</option>
+                                    </select>
+                                    <select name="accounts[]" class="form-control account-select" required>
+                                        <option value="">Select Account</option>
+                                        <option value="${account.account}" selected>${account.account}</option>
+                                    </select>
+                                    ${
+                                        index === 0
+                                            ? `<button type="button" class="btn btn-secondary addFieldBtn" style="padding: 6px 13px; background-color: green; color: white;">+</button>
+                                            <button type="button" title="Blank the current field"style="padding: 6px 6px;" class="removeFieldBtn btn btn-danger">-</button>`
+                                            : `<button type="button" class="btn btn-danger removeFieldBtn" style="padding: 6px 20px; color: white;">-</button>`
+                                    }
+                                </div>
+                            `;
+                            $('#account-fields-container').append(savedAccountFields);
+                        });
+                    } else {
+                        // If no saved accounts, add an empty first row with "+" button
+                        addNewAccountRow();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching saved accounts:', error);
+                }
+            });
+            // Show the modal
             $('#social_accounts').modal('show');
         });
-        
-        // Add new fields when + button is clicked
-        $('#addFieldBtn').click(function() {
+
+        // Function to add a new account row
+        function addNewAccountRow() {
             var newAccountFields = `
                 <div class="form-group mt-5">
-                    <select name="platform[]" class="form-control platform-select child-plateform">
+                    <select name="platform[]" class="form-control platform-select" required>
                         <option value="" selected>Select Social Media Platform</option>
                         <option value="facebook">Facebook</option>
                         <option value="instagram">Instagram</option>
                         <option value="twitter">Twitter</option>
                         <option value="youtube">YouTube</option>
                     </select>
-                    <select name="app_series[]" class="form-control app-series-select">
+                    <select name="app_series[]" class="form-control app-series-select" required>
                         <option value="" selected>Select App Series</option>
                     </select>
-                    <select name="accounts[]" class="form-control account-select">
+                    <select name="accounts[]" class="form-control account-select" required>
+                        <option value="" selected>Select Account</option>
+                    </select>
+                    <button type="button" class="btn btn-secondary addFieldBtn" style="padding: 6px 20px; background-color: green; color: white;">+</button>
+                </div>
+            `;
+            // Append the new fields to the container
+            $('#account-fields-container').append(newAccountFields);
+        }
+
+        // Add new fields when + button is clicked
+        $('#account-fields-container').on('click', '.addFieldBtn', function () {
+            var newAccountFields = `
+                <div class="form-group mt-5">
+                    <select name="platform[]" class="form-control platform-select" required>
+                        <option value="" selected>Select Social Media Platform</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="twitter">Twitter</option>
+                        <option value="youtube">YouTube</option>
+                    </select>
+                    <select name="app_series[]" class="form-control app-series-select" required>
+                        <option value="" selected>Select App Series</option>
+                    </select>
+                    <select name="accounts[]" class="form-control account-select" required>
                         <option value="" selected>Select Account</option>
                     </select>
                     <button type="button" class="btn btn-danger removeFieldBtn" style="padding: 6px 20px; color: white;">-</button>
@@ -372,11 +433,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $('#account-fields-container').append(newAccountFields);
         });
 
-        // Remove fields when - button is clicked
-        $('#account-fields-container').on('click', '.removeFieldBtn', function() {
-            $(this).closest('.form-group').remove();
+        // Remove fields and delete the record when - button is clicked
+        $('#account-fields-container').on('click', '.removeFieldBtn', function () {
+
+            var $formGroup = $(this).closest('.form-group');
+            var accountId = $formGroup.find('.account-select').val();
+            var platform = $formGroup.find('.platform-select').val();
+            if (accountId) {
+                $.ajax({
+                    url: '<?php echo base_url(). "home/delete_social_media_account" ?>',
+                    type: 'POST',
+                    data: { id: accountId, platform: platform},
+                    success: function(response) {
+                        if (response) {
+                            $formGroup.remove();
+                        } else {
+                            alert('Failed to delete the account.');
+                        }
+                    },
+                    error: function() {
+                        alert('Error deleting account.');
+                    }
+                });
+            } else {
+                $formGroup.remove();
+            }
         });
 
+        // Show app series list
         var appSeriesOptions = {
             facebook: [
                 { value: 'facebook1', text: 'Facebook1' },
@@ -393,9 +477,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
             youtube: [
                 { value: 'youtube1', text: 'YouTube1' },
                 { value: 'youtube2', text: 'YouTube2' }
+            ],
+            tiktok: [
+                { value: 'tiktok1', text: 'TikTok1' },
+                { value: 'tiktok2', text: 'TikTok2' }
+            ],
+            whatsapp: [
+                { value: 'whatsapp1', text: 'WhatsApp1' },
+                { value: 'whatsapp2', text: 'WhatsApp2' }
             ]
         };
 
+        // When change the social account platform show app series
         $(document).on('change', '.platform-select', function() {
             var platform = $(this).val();
             var $appSeriesSelect = $(this).closest('.form-group').find('.app-series-select'); 
@@ -409,8 +502,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             }
         });
 
-        
-        // Fetch social accounts
+        // Fetch social accounts when select app series
         $(document).on('change', '.app-series-select', function() {
             // Initialize Select2 on account-select
             $(document).ready(function() {
@@ -424,11 +516,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
             var selectAccount = $(this).closest('.form-group').find('.account-select');
             if (socialApp != '') {
                 $.ajax({
-                    url: "<?php echo base_url(); ?>home/fetch_social_accounts",
+                    url: "<?php echo base_url(); ?>home/fetch_social_media_accounts",
                     method: "POST",
-                    data: {
-                        social_app: socialApp
-                    },
+                    data: { social_app: socialApp },
                     success: function(data) {
                         selectAccount.html('');
                         selectAccount.html(data);

@@ -1,6 +1,4 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-?>
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <style>
     .sidebar ul li a.active {
         background: transparent;
@@ -58,7 +56,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="form-group">
                                     <label>Select User Status<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <select name="status" id="status" class="form-control status" required>
+                                    <select name="status" id="status" class="form-control status">
                                         <option selected value="">Select User Status</option>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
@@ -88,7 +86,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" id="userCancleModel" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <button type="button" class="close" id="userCancleModal" data-dismiss="modal" aria-hidden="true">&times;</button>
                                 <h4 class="modal-title" id="permissionModalLabel">Set User Permissions</h4>
                             </div>
                             <div class="modal-body">
@@ -355,6 +353,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     // Edit the user
     $('a.editcap').on('click', function() {
+        $('#status').closest('.form-group').show();
 		var myModal = $('#myModal');
 		// now get the values from the table
 		var id = $(this).attr('id');
@@ -386,6 +385,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     // Add new users
     $('button.add_new').on('click', function() {
+        $('#status').closest('.form-group').hide();
         var myModal1 = $('#myModal');
         $('.name', myModal1).val('');
         $('.email', myModal1).val('');
@@ -404,6 +404,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
     // Get user permissions
     $(document).ready(function() {
+        // Outside the modal not clickable
+        $('#myModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: false
+        });
+
+        $('#userPermissionsModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: false
+        });
+
         // Year wise filtering
         $.fn.dataTable.ext.search.push(
             function(settings, data, dataIndex) {
@@ -442,7 +455,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         });
 
         // When cancle user model referesh the page
-        $('#userCancleModel').click(function() {
+        $('#userCancleModal').click(function() {
             location.reload();
         });
 

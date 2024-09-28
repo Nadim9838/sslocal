@@ -1,6 +1,4 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-?>
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <style>
     .sidebar ul li a.active {
         background: transparent;
@@ -18,7 +16,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12"> 
-                <h1 class="page-header"><i class="fa fa-facebook fa-fw"></i>Facebook Management<span style="float:right;"><button class="btn btn-outline btn-primary add_new">Add Facebook Account</button></span></h1>
+                <h1 class="page-header"><i class="fa fa-facebook fa-fw"></i>Account Management<span style="float:right;"><button class="btn btn-outline btn-primary add_new">Add Facebook Account</button></span></h1>
                 <div id="flash-message" style="">
                     <?php echo $this->session->flashdata('msg'); ?>  
                 </div>
@@ -35,26 +33,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="alert alert-danger alert-dismissable error1" style="display:none;"></div>
 
                                 <?php $data = array('role' => 'form');
-                                echo form_open_multipart("home/add_update_facebook", $data); ?>
+                                echo form_open_multipart("home/add_update_fb_account", $data); ?>
 
                                 <div class="form-group">
-									<label>Enter Name<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" name="name" id="name" class="form-control name" placeholder="Enter Name" required>
+									<label>Enter Facebook Account Name<span style="color:#FF0000;"><sup>*</sup></span></label>
+									<input type="text" name="name" id="name" class="form-control name" placeholder="Enter Facebook Account Name" required>
 								</div>
 
                                 <div class="form-group">
-									<label>Enter Profile Link<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" name="profile_link" id="profile_link" class="form-control profile_link" placeholder="Enter Profile Link" required>
+									<label>Enter Facebook Account Link<span style="color:#FF0000;"><sup>*</sup></span></label>
+									<input type="text" name="profile_link" id="profile_link" class="form-control profile_link" placeholder="Enter Facebook Account Link" required>
 								</div>
 
                                 <div class="form-group">
-									<label>Enter Facebook Id<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="text" name="account_id" id="account_id" class="form-control account_id" placeholder="Enter Facebook Id" required>
+									<label>Enter Facebook Account Id<span style="color:#FF0000;"><sup>*</sup></span></label>
+									<input type="text" name="account_id" id="account_id" class="form-control account_id" placeholder="Enter Facebook Account Id" required>
 								</div>
 
                                 <div class="form-group">
-									<label>Enter Password<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="password" name="password" id="password" class="form-control password" placeholder="Enter Password" required>
+									<label>Enter Facebook Account Password<span style="color:#FF0000;"><sup>*</sup></span></label>
+									<input type="password" name="password" id="password" class="form-control password" placeholder="Enter Facebook Account Password" required>
 								</div>
 
                                 <div class="form-group">
@@ -79,7 +77,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="form-group">
 									<label>Enter Religion<span style="color:#FF0000;"><sup>*</sup></span></label>
-									<input type="religion" id="religion" name="religion" class="form-control email" placeholder="Enter Religion" required>
+									<input type="text" id="religion" name="religion" class="form-control religion" placeholder="Enter Religion" required>
+								</div>
+
+                                <div class="form-group">
+									<label>Enter Cast<span style="color:#FF0000;"><sup>*</sup></span></label>
+									<input type="text" id="cast" name="cast" class="form-control cast" placeholder="Enter Cast" required>
 								</div>
                                 
                                 <div class="form-group">
@@ -89,7 +92,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 <div class="form-group">
                                     <label>Enter Age<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <input type="int" name="age" id="age" value='age' readonly class="form-control age" placeholder="Enter age" required>
+                                    <input type="number" name="age" id="age" readonly class="form-control age" placeholder="Enter age" required>
                                 </div>
 
                                 <div class="form-group">
@@ -112,9 +115,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 									<input type="number" name="friends" id="friends" class="form-control friends" placeholder="Enter No. of Friends" required>
 								</div>
 
+                                <div class="statusField">
+
+                                </div>
                                 <div class="form-group">
-                                    <label>Selec Status<span style="color:#FF0000;"><sup>*</sup></span></label>
-                                    <select name="status" id="status" class="form-control status" required>
+                                    <label>Select Status<span style="color:#FF0000;"><sup>*</sup></span></label>
+                                    <select name="status" id="status" class="form-control status">
                                         <option Selected value="">Select Status</option>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
@@ -173,6 +179,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <th class="text-center">Email ID</th>
                                         <th class="text-center">Gender</th>
                                         <th class="text-center">Religion</th>
+                                        <th class="text-center">Cast</th>
                                         <th class="text-center">DOB</th>
                                         <th class="text-center">Age</th>
                                         <th class="text-center">Location</th>
@@ -202,6 +209,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 										echo "<td class='email'>" . $r["email"] . "</td>";
 										echo "<td class='gender'>" . $r["gender"] . "</td>";
 										echo "<td class='religion'>" . $r["religion"] . "</td>";
+										echo "<td class='cast'>" . $r["cast"] . "</td>";
 										echo "<td class='dob'>" . $r["dob"] . "</td>";
 										echo "<td class='age'>" . $r["age"] . "</td>";
 										echo "<td class='location'>" . $r["location"] . "</td>";
@@ -220,8 +228,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
         </div>
     </div>
-</div>
-
+  </div>
 </div>
 
 <script>
@@ -252,12 +259,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             confirm: function(button) {
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo base_url() . "home/delete_facebook/"; ?>" + uid,
+                    url: "<?php echo base_url() . "home/delete_fb_account/"; ?>" + uid,
                     success: function(data) {
                         if (data == '1') {
-                            document.location.href = '<?php echo base_url() . "home/facebook_management"; ?>';
+                            document.location.href = '<?php echo base_url() . "home/fb_account_management"; ?>';
                         } else {
-                            document.location.href = '<?php echo base_url() . "home/facebook_management"; ?>';
+                            document.location.href = '<?php echo base_url() . "home/fb_account_management"; ?>';
                         }
                     }
                 });
@@ -268,9 +275,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
         });
     });
 
-    // Edit the facebook
+    // Edit the facebook account details
     $('a.editcap').on('click', function() {
 		var myModal = $('#myModal');
+        $('#status').closest('.form-group').show();
 		// now get the values from the table
 		var id = $(this).attr('id');
 		var name = $(this).closest('tr').find('td.name').html();
@@ -281,6 +289,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		var email = $(this).closest('tr').find('td.email').html();
 		var gender = $(this).closest('tr').find('td.gender').html();
 		var religion = $(this).closest('tr').find('td.religion').html();
+		var cast = $(this).closest('tr').find('td.cast').html();
 		var dob = $(this).closest('tr').find('td.dob').html();
 		var age = $(this).closest('tr').find('td.age').html();
 		var location = $(this).closest('tr').find('td.location').html();
@@ -298,6 +307,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		$('.email', myModal).val(email);
 		$('.gender', myModal).val(gender);
 		$('.religion', myModal).val(religion);
+		$('.cast', myModal).val(cast);
 		$('.dob', myModal).val(dob);
 		$('.age', myModal).val(age);
 		$('.location', myModal).val(location);
@@ -318,8 +328,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		return false;
 	});
 
-    // Add new users
+    // Add new facebook account
     $('button.add_new').on('click', function() {
+        $('#status').closest('.form-group').hide();
         var myModal1 = $('#myModal');
         $('.name', myModal).val('');
 		$('.profile_link', myModal).val('');
@@ -329,6 +340,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		$('.email', myModal).val('');
 		$('.gender', myModal).val('');
 		$('.religion', myModal).val('');
+		$('.cast', myModal).val('');
 		$('.dob', myModal).val('');
 		$('.age', myModal).val('');
 		$('.location', myModal).val('');
@@ -347,6 +359,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
     });
 
     $(document).ready(function(){
+        // Outside the modal not clickable 
+        $('#myModal').modal({
+        backdrop: 'static',
+        keyboard: false,
+        show: false
+        });
+
         // Year wise filtering
         $.fn.dataTable.ext.search.push(
             function(settings, data, dataIndex) {
@@ -368,6 +387,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             table.draw();
         });
 
+        // Get age according to the date of birth
         $('#dob').on('change', function(){
             var dob = new Date($(this).val());
             var today = new Date();
@@ -377,7 +397,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
                 age--;
             }
-            
+
             $('#age').val(age);
         });
     });
